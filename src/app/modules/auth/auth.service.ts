@@ -47,9 +47,36 @@ const signUpUser = async (payload: ISignUpPatientPayload) => {
         )
     }
 
-    // TODO - Create patient profile
-
-    return data;
+    // Create patient profile
+    try {
+        const patient = await prisma.$transaction(async (tx) => {
+            const paitentTx = await tx.patient.create({
+                data: {
+                    userId: data.user.id,
+                    name: payload?.name,
+                    email: payload?.email,
+                }
+            });
+            return paitentTx;
+        });
+        return {
+            ...data,
+            patient
+        };
+    }
+    catch (err) {
+        console.log("Transaction error", err);
+        //  If patient creation fails, delete auth user for advance safety
+        await prisma.user.delete({
+            where: {
+                id: data.user.id
+            }
+        })
+        throw new AppError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            "Patient profile creation failed"
+        );
+    }
 }
 
 // ** Login user
@@ -76,7 +103,6 @@ const loginUser = async (payload: ILoginUserPayload) => {
             "Your account has been deleted"
         );
     }
-
     return data;
 }
 

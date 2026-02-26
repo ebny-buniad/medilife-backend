@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import { IndexRoutes } from "./app/routes";
 import globalErrorHandler from "./middlewares/globalErrorHandler";
+import notFound from "./middlewares/notFound";
 const app: Application = express();
 
 // Enable URL-encoded form data parsing
@@ -15,6 +16,9 @@ app.use("/api/v1", IndexRoutes)
 
 // Global error handler
 app.use(globalErrorHandler)
+
+// Not found
+app.use(notFound)
 
 // Basic route
 app.get('/', async (req: Request, res: Response) => {
