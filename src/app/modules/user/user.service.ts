@@ -25,16 +25,17 @@ const createDoctor = async (payload: ICreateDoctorPayload) => {
         specialities.push(specciality);
     }
 
-    // If doctor with email already exists
+    // If doctor already exists
     const doctorExists = await prisma.doctor.findUnique({
         where: {
-            email: payload?.doctor?.email
+            email: payload?.doctor?.email,
+            registrationNumber: payload?.doctor?.registrationNumber
         }
     });
     if (doctorExists) {
         throw new AppError(
             StatusCodes.BAD_REQUEST,
-            `Doctor with email ${payload?.doctor?.email} already exists`
+            `Doctor with email ${payload?.doctor?.email} & ${payload?.doctor?.registrationNumber} already exists`
         )
     }
 
@@ -58,7 +59,6 @@ const createDoctor = async (payload: ICreateDoctorPayload) => {
                     ...payload.doctor,
                 }
             });
-
             // Create doctor specialities
             const doctorSpecialitiesData = specialities.map((speciality) => {
                 return {
@@ -66,12 +66,10 @@ const createDoctor = async (payload: ICreateDoctorPayload) => {
                     specialityId: speciality?.id
                 }
             })
-
             // Create doctor specialities in bulk
             await tx.doctorSpeciality.createMany({
                 data: doctorSpecialitiesData
             })
-
             const doctor = await tx.doctor.findUnique({
                 where: {
                     id: doctorData?.id
@@ -81,15 +79,18 @@ const createDoctor = async (payload: ICreateDoctorPayload) => {
                     specialities: true
                 }
             });
-
             return doctor;
-
         });
-
         return result;
     }
     catch (error) {
         console.log(error)
+        //  If doctor creation fails, delete auth user for advance safety
+        await prisma.user.delete({
+            where: {
+                id: userData.user.id
+            }
+        })
     }
 }
 

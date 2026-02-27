@@ -10,7 +10,7 @@ model Speciality {
 
   isDeleted          Boolean            @default(false)
   deleteAt           DateTime?
-  doctorSpecialities DoctorSpeciality[]
+  doctorSpecialsities DoctorSpeciality[]
 
   @@index([isDeleted], name: "idx_speciality_isDeleted")
   @@index([title], name: "idx_speciality_title")
