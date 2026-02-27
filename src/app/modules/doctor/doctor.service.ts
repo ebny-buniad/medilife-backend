@@ -7,6 +7,9 @@ import { IDoctorUpdatePayload } from "../../types/user.interface";
 // ** Get all doctors
 const getAllDoctors = async () => {
     const doctors = await prisma.doctor.findMany({
+        where: {
+            isDeleted: false
+        },
         include: {
             user: {
                 select: {
@@ -152,8 +155,22 @@ const updateDoctorById = async (doctorId: string, payload: IDoctorUpdatePayload)
     }
 }
 
+// ** Delete doctor by id (Soft delete - set isDeleted to true)
+const deleteDoctorById = async (doctorId: string) => {
+    const deletedDoctor = await prisma.doctor.update({
+        where: {
+            id: doctorId
+        },
+        data: {
+            isDeleted: true
+        }
+    });
+    return deletedDoctor;
+}
+
 export const DoctorService = {
     getAllDoctors,
     getDoctorById,
-    updateDoctorById
+    updateDoctorById,
+    deleteDoctorById
 }
