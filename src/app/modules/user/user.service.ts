@@ -1,13 +1,13 @@
 import { Role, Speciality } from "../../../generated/prisma/client";
 import AppError from "../../errors/AppError";
 import { prisma } from "../../lib/prisma";
-import { ICreateDoctorPayload } from "./user.interface";
 import { auth } from "../../lib/auth";
 import { StatusCodes } from "http-status-codes";
+import { IDoctorPayload } from "../../types/user.interface";
 
 // ** Create doctor
 
-const createDoctor = async (payload: ICreateDoctorPayload) => {
+const createDoctor = async (payload: IDoctorPayload) => {
     const specialities: Speciality[] = [];
 
     for (const specialityId of payload.specialities) {

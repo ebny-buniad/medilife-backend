@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ICreateDoctorPayload } from "./user.interface";
+import { ICreateDoctorPayload } from "../../types/user.interface";
 import { catchAsync } from "../../utils/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
