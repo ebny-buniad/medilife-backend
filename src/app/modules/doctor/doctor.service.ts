@@ -3,7 +3,6 @@ import { Speciality } from "../../../generated/prisma/client";
 import AppError from "../../errors/AppError";
 import { prisma } from "../../lib/prisma"
 import { IDoctorUpdatePayload } from "../../types/user.interface";
-
 // ** Get all doctors
 const getAllDoctors = async () => {
     const doctors = await prisma.doctor.findMany({
@@ -96,6 +95,7 @@ const updateDoctorById = async (doctorId: string, payload: IDoctorUpdatePayload)
         specialities.push(speciality);
     }
 
+  
     try {
         const result = await prisma.$transaction(async (tx) => {
             // Update doctor data

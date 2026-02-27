@@ -11,18 +11,18 @@ const createDoctor = async (payload: IDoctorPayload) => {
     const specialities: Speciality[] = [];
 
     for (const specialityId of payload.specialities) {
-        const specciality = await prisma.speciality.findUnique({
+        const speciality = await prisma.speciality.findUnique({
             where: {
                 id: specialityId
             }
         });
-        if (!specciality) {
+        if (!speciality) {
             throw new AppError(
                 StatusCodes.BAD_REQUEST,
                 "Speciality with id " + specialityId + " not found"
             )
         };
-        specialities.push(specciality);
+        specialities.push(speciality);
     }
 
     // If doctor already exists
