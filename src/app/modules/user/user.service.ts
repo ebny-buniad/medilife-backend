@@ -26,10 +26,12 @@ const createDoctor = async (payload: IDoctorPayload) => {
     }
 
     // If doctor already exists
-    const doctorExists = await prisma.doctor.findUnique({
+    const doctorExists = await prisma.doctor.findFirst({
         where: {
-            email: payload?.doctor?.email,
-            registrationNumber: payload?.doctor?.registrationNumber
+            OR: [
+                { email: payload?.doctor?.email },
+                { registrationNumber: payload?.doctor?.registrationNumber }
+            ]
         }
     });
     if (doctorExists) {

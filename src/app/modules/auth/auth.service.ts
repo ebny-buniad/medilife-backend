@@ -3,6 +3,7 @@ import AppError from "../../errors/AppError";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
 import { UserStatus } from "../../../generated/prisma/enums";
+import { tokenUtils } from "../../utils/token";
 
 interface ISignUpPatientPayload {
     name: string,
@@ -59,8 +60,14 @@ const signUpUser = async (payload: ISignUpPatientPayload) => {
             });
             return paitentTx;
         });
+
+        // Create access token and refresh token
+        const accessToken = tokenUtils.getAccessToken(data.user);
+        const refreshToken = tokenUtils.getRefreshToken(data.user);
         return {
             ...data,
+            accessToken,
+            refreshToken,
             patient
         };
     }
@@ -103,7 +110,16 @@ const loginUser = async (payload: ILoginUserPayload) => {
             "Your account has been deleted"
         );
     }
-    return data;
+
+    // Create access token and refresh token
+    const accessToken = tokenUtils.getAccessToken(data.user);
+    const refreshToken = tokenUtils.getRefreshToken(data.user);
+
+    return {
+        ...data,
+        accessToken,
+        refreshToken
+    };
 }
 
 export const authServices = {
