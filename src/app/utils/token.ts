@@ -5,10 +5,11 @@ import { Response } from "express";
 import { cookieUtils } from "./cookie";
 
 // Get access token
+// Get access token (data from auth service data.user)
 const getAccessToken = (payload: JwtPayload) => {
     const accessToken = jwtUtils.createToken(payload, envVars.ACCESS_TOKEN_SECRET,
         { expiresIn: envVars.ACCESS_TOKEN_EXPIRES_IN } as SignOptions);
-    console.log("Get access token======", accessToken)
+    // console.log("Get access token======", accessToken)
     return accessToken;
 }
 
@@ -16,7 +17,7 @@ const getAccessToken = (payload: JwtPayload) => {
 const getRefreshToken = (payload: JwtPayload) => {
     const refreshToken = jwtUtils.createToken(payload, envVars.REFRESH_TOKEN_SECRET,
         { expiresIn: envVars.REFRESH_TOKEN_EXPIRES_IN } as SignOptions);
-    console.log("Get refresh token=====", refreshToken)
+    // console.log("Get refresh token=====", refreshToken)
     return refreshToken;
 }
 
