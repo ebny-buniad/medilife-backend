@@ -31,7 +31,7 @@ const setAccessTokenCookie = (res: Response, token: string) => {
         secure: true,
         sameSite: 'none',
         path: "/",
-        maxAge: 60 * 60 * 1000 // 60 minutes
+        maxAge: 60 * 60 * 60 * 24 * 7 // 60 minutes
     })
 }
 

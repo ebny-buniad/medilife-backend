@@ -10,6 +10,7 @@
     "studio": "npx prisma studio",
     "generate": "npx prisma generate",
     "migrate": "npx prisma migrate dev",
+    "::seed": "tsx src/seed/superAdmin.seed.ts",
     "lint": "eslint ./src/**/*"
   },
   "keywords": [],

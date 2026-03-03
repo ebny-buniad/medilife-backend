@@ -36,3 +36,15 @@ export interface IDoctorUpdatePayload {
     specialities: string[];
 }
 
+
+// Admin Interface
+export interface ICreateAdmin {
+    password: string,
+    admin: {
+        name: string,
+        email: string,
+        profilePhoto?: string,
+        contactNumber: string
+    }
+}
+
