@@ -1,11 +1,13 @@
 import { Router } from "express";
-import { specialityRouter } from "../modules/speciality/speciality.router";
-import { authRouter } from "../modules/auth/auth.router";
-import { userRouter } from "../modules/user/user.router";
-import { doctorRouter } from "../modules/doctor/doctor.router";
+import { specialityRouter } from "../modules/speciality/speciality.routes";
+import { authRouter } from "../modules/auth/auth.routes";
+import { userRouter } from "../modules/user/user.routes";
+import { doctorRouter } from "../modules/doctor/doctor.routes";
+import { adminRouter } from "../modules/admin/admin.routes";
 
 const router = Router();
 router.use("/auth", authRouter)
+router.use("/admin", adminRouter)
 router.use("/speciality", specialityRouter)
 router.use("/users", userRouter)
 router.use("/doctors", doctorRouter)

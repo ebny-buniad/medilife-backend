@@ -2,7 +2,7 @@ import * as z from 'zod';
 import { Gender } from '../../../generated/prisma/enums';
 
 
-const phoneSchema = z
+export const phoneSchema = z
     .string()
     .trim()
     .refine((value) => {
@@ -36,7 +36,7 @@ export const createAdminZodSchema = z.object({
     admin: z.object({
         name: z.string("Name is required and must be a string").min(5, "Name must be at least 5 characters long"),
         email: z.email("Invalid email address"),
-        profilePhoto: z.url("Required profile photo"),
+        // profilePhoto: z.url("Required profile photo"),
         contactNumber: phoneSchema
     })
 })
