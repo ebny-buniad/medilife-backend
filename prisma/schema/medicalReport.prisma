@@ -6,7 +6,7 @@ model MedicalReport {
   updatedAt  DateTime @updatedAt
 
   patientId String
-  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([patientId])
   @@map("medical_reports")

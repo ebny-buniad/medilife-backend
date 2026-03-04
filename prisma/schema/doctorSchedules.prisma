@@ -7,8 +7,8 @@ model DoctorSchedules {
   updatedAt  DateTime @updatedAt
 
   // Relations
-  doctor   Doctor   @relation(fields: [doctorId], references: [id])
-  schedule Schedule @relation(fields: [scheduleId], references: [id])
+  doctor   Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  schedule Schedule @relation(fields: [scheduleId], references: [id] , onDelete: Cascade, onUpdate: Cascade)
 
   @@unique([doctorId, scheduleId])
   @@map("doctor_schedules")

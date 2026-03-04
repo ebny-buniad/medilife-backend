@@ -7,14 +7,16 @@ model Appointment {
   updatedAt      DateTime          @updatedAt
 
   patientId String
-  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   doctorId String
-  doctor   Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  doctor   Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  scheduleId String
-  schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
-  review     Review?
+  scheduleId   String
+  schedule     Schedule      @relation(fields: [scheduleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  review       Review?
+  prescription Prescription?
+  payment      Payment?
 
   @@index([patientId])
   @@index([doctorId])

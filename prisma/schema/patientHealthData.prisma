@@ -20,7 +20,7 @@ model PatientHealthData {
   updatedAt           DateTime   @updatedAt
 
   patientId String  @unique
-  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([patientId])
   @@map("patient_health_data")

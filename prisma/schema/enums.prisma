@@ -40,7 +40,6 @@ enum PaymentStatus {
   UNPAID
 }
 
-
 enum MaritalStatus {
   MARRIED
   UNMARRIED

@@ -25,6 +25,7 @@ model Doctor {
   doctorSchedules DoctorSchedules[]
   appointments    Appointment[]
   reviews         Review[]
+  prescriptions   Prescription[]
 
   @@index([isDeleted], name: "idx_doctor_isDeleted")
   @@index([email], name: "idx_doctor_email")
