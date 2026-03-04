@@ -1,55 +1,42 @@
 import { StatusCodes } from "http-status-codes";
 import AppError from "../../errors/AppError";
 import { prisma } from "../../lib/prisma"
-import { IUpdateAdmin } from "./admin.interface";
+import { IUpdateSuperAdmin } from "./superAdmin.interface";
 
-// ** Get all admins
+// ** Get all super admin
 
-const getAllAdmins = async () => {
-    const admins = await prisma.admin.findMany({
+const getAllSuperAdmin = async () => {
+    const superAdmin = await prisma.superAdmin.findMany({
         where: {
-            isActive: true,
-            isDeleted: false
+            isDeleted: false,
+            isActive: true
         },
         include: {
             user: true
         }
     });
-
-    if (!admins) {
-        throw new AppError(
-            StatusCodes.NOT_FOUND,
-            "No admin here!"
-        )
-    }
-    return admins;
+    return superAdmin;
 }
 
-// ** Get admin by Id
+// ** Get super admin by id
 
-const getAdmin = async (id: string) => {
-    const admin = await prisma.admin.findUnique({
-        where: { id: id },
+const getSuperAdmin = async (id: string) => {
+    const superAdmin = await prisma.superAdmin.findUnique({
+        where: { id },
         include: {
             user: true
         }
     });
-
-    if (!admin) {
-        throw new AppError(
-            StatusCodes.NOT_FOUND,
-            "No admin here!"
-        )
-    }
-    return admin;
+    return superAdmin;
 }
 
-// ** Update admin data
 
-const updateAdmin = async (id: string, payload: IUpdateAdmin) => {
+// ** Update super admin data
 
-    // Check admin data available
-    const isExits = await prisma.admin.findFirst({
+const updateSuperAdmin = async (id: string, payload: IUpdateSuperAdmin) => {
+
+    // Check super admin data available
+    const isExits = await prisma.superAdmin.findFirst({
         where: { id }
     });
 
@@ -61,7 +48,7 @@ const updateAdmin = async (id: string, payload: IUpdateAdmin) => {
     }
 
     const result = await prisma.$transaction(async (tx) => {
-        const updateAdmin = await tx.admin.update({
+        const updateAdmin = await tx.superAdmin.update({
             where: { id },
             data: {
                 name: payload?.name,
@@ -85,7 +72,7 @@ const updateAdmin = async (id: string, payload: IUpdateAdmin) => {
             }
         });
 
-        const updateUserData = await tx.admin.findFirst({
+        const updateUserData = await tx.superAdmin.findFirst({
             where: { id: updateAdmin.id },
             include: {
                 user: true
@@ -96,10 +83,11 @@ const updateAdmin = async (id: string, payload: IUpdateAdmin) => {
     return result;
 }
 
+
 // ** Soft delete admin data
 
-const deleteAdmin = async (id: string) => {
-    const deleteData = await prisma.admin.update({
+const deleteSuperAdmin = async (id: string) => {
+    const deleteData = await prisma.superAdmin.update({
         where: { id },
         data: {
             isDeleted: true
@@ -108,15 +96,9 @@ const deleteAdmin = async (id: string) => {
     return deleteData
 }
 
-export const adminServices = {
-    getAllAdmins,
-    getAdmin,
-    updateAdmin,
-    deleteAdmin
+export const superAdminServices = {
+    getAllSuperAdmin,
+    getSuperAdmin,
+    updateSuperAdmin,
+    deleteSuperAdmin
 }
-
-
-
-
-
-
