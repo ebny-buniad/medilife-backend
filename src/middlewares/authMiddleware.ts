@@ -13,17 +13,8 @@ declare global {
         interface Request {
             user?: {
                 id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
                 email: string;
-                emailVerified: boolean;
                 role: Role;
-                status: UserStatus;
-                changePassword: boolean;
-                isDeleted: boolean;
-                deletedAt: Date | null;
-                image: string | null;
             };
         }
     }
@@ -96,17 +87,8 @@ export const authMiddleware = (...authRoles: Role[]) => async (req: Request, res
 
                 req.user = {
                     id: user.id,
-                    createdAt: user.createdAt,
-                    updatedAt: user.updatedAt,
-                    name: user.name,
                     email: user.email,
-                    emailVerified: user.emailVerified,
                     role: user.role,
-                    status: user.status,
-                    changePassword: user.changePassword,
-                    isDeleted: user.isDeleted,
-                    deletedAt: user.deletedAt,
-                    image: user.image
                 }
 
                 const accessToken = cookieUtils.getCookie(req, "accessToken");

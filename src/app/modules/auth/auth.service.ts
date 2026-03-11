@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StatusCodes } from "http-status-codes";
 import AppError from "../../errors/AppError";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
-import { UserStatus } from "../../../generated/prisma/enums";
+import { Role, UserStatus } from "../../../generated/prisma/enums";
 import { tokenUtils } from "../../utils/token";
+import { IRequestUser } from "../../interfaces/requestUser.interface";
+import { jwtUtils } from "../../utils/jwt";
+import { envVars } from "../../../config/env";
+import { JwtPayload } from "jsonwebtoken";
 
 interface ISignUpPatientPayload {
     name: string,
@@ -122,7 +127,111 @@ const loginUser = async (payload: ILoginUserPayload) => {
     };
 }
 
+// ** Get me (User information) 
+const getMe = async (user: IRequestUser) => {
+    // Find exist user
+    const existUser = await prisma.user.findUnique({
+        where: {
+            id: user.id
+        },
+        include: {
+            patient: true
+        }
+    });
+
+    if (!existUser) {
+        throw new AppError(
+            StatusCodes.NOT_FOUND,
+            "User not found!"
+        )
+    }
+
+    const roleIncludeMap: Record<Role, any> = {
+        [Role.PATIENT]: { patient: true },
+        [Role.DOCTOR]: { patient: true },
+        [Role.ADMIN]: { patient: true },
+        [Role.SUPER_ADMIN]: { patient: true }
+    };
+
+    return prisma.user.findUnique({
+        where: {
+            id: existUser.id
+        },
+        include: roleIncludeMap[existUser.role]
+    })
+}
+
+// ** Generate refresh token for get access token
+const getNewToken = async (refreshToken: string, sessionToken: string) => {
+
+    // Check user login or  not (session)
+    const isSessionTokenExists = await prisma.session.findUnique({
+        where: {
+            token: sessionToken
+        },
+        include: {
+            user: true
+        }
+    });
+
+    if (!isSessionTokenExists) {
+        throw new AppError(
+            StatusCodes.UNAUTHORIZED,
+            "Invalied session token"
+        )
+    }
+
+    const verifiedRefreshToken = jwtUtils.verifyToken(refreshToken, envVars.REFRESH_TOKEN_SECRET);
+    if (!verifiedRefreshToken.success && verifiedRefreshToken.error) {
+        throw new AppError(
+            StatusCodes.UNAUTHORIZED,
+            "Invalied refresh token"
+        )
+    }
+
+    const user = verifiedRefreshToken.data as JwtPayload;
+
+    const userInfo = {
+        id: user?.id,
+        name: user?.name,
+        email: user?.email,
+        emailVerified: user?.email.emailVerified,
+        image: null,
+        createdAt: user?.createdAt,
+        updatedAt: user?.updatedAt,
+        role: user?.role,
+        status: user?.status,
+        changePassword: user?.changePassword,
+        isDeleted: user?.isDeleted,
+        deletedAt: user?.deletedAt,
+    }
+
+    // Create new access token and new refresh token
+    const newAccessToken = tokenUtils.getAccessToken(userInfo);
+    const newRefreshToken = tokenUtils.getRefreshToken(userInfo);
+
+    // Update session token
+    const { token } = await prisma.session.update({
+        where: {
+            token: sessionToken
+        },
+        data: {
+            token: sessionToken,
+            expiresAt: new Date(Date.now() + 60 * 60 * 60 * 24 * 1000),
+            updatedAt: new Date()
+        }
+    })
+
+    return {
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+        sessionToken: token
+    }
+}
+
 export const authServices = {
     signUpUser,
-    loginUser
+    loginUser,
+    getMe,
+    getNewToken
 } 
