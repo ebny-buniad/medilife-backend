@@ -10,4 +10,9 @@ router.get("/get-me", authMiddleware(Role.PATIENT, Role.DOCTOR, Role.ADMIN, Role
     authController.getMe)
 router.post("/refresh-token", authController.getNewToken)
 
+router.post("/change-password", authMiddleware(Role.PATIENT, Role.DOCTOR, Role.ADMIN, Role.SUPER_ADMIN),
+    authController.changePassword)
+router.post("/logout", authMiddleware(Role.PATIENT, Role.DOCTOR, Role.ADMIN, Role.SUPER_ADMIN),
+    authController.logoutUser)
+
 export const authRouter: Router = router;
