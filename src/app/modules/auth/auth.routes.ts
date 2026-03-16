@@ -14,5 +14,7 @@ router.post("/change-password", authMiddleware(Role.PATIENT, Role.DOCTOR, Role.A
     authController.changePassword)
 router.post("/logout", authMiddleware(Role.PATIENT, Role.DOCTOR, Role.ADMIN, Role.SUPER_ADMIN),
     authController.logoutUser)
+router.post("/verify-email", authMiddleware(Role.PATIENT, Role.DOCTOR, Role.ADMIN, Role.SUPER_ADMIN),
+    authController.verifyEmail)
 
 export const authRouter: Router = router;

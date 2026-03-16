@@ -21,6 +21,14 @@ interface EnvConfig {
     CONTACT_NUMBER: string,
     SUPER_ADMIN_EMAIL: string,
     SUPER_ADMIN_PASSWORD: string
+
+    EMAIL_SENDER: {
+        SMTP_USER: string,
+        SMTP_PASS: string,
+        SMTP_HOST: string,
+        SMTP_PORT: string,
+        SMTP_FROM: string
+    }
 }
 
 const requiredEnvVariables = [
@@ -38,7 +46,13 @@ const requiredEnvVariables = [
     'PROFILE_PHOTO',
     'CONTACT_NUMBER',
     'SUPER_ADMIN_EMAIL',
-    'SUPER_ADMIN_PASSWORD'
+    'SUPER_ADMIN_PASSWORD',
+
+    'EMAIL_SENDER_SMTP_USER',
+    'EMAIL_SENDER_SMTP_PASS',
+    'EMAIL_SENDER_SMTP_HOST',
+    'EMAIL_SENDER_SMTP_PORT',
+    'EMAIL_SENDER_SMTP_FROM'
 ]
 
 requiredEnvVariables.forEach((variable) => {
@@ -65,6 +79,14 @@ const loadEnvVariables = (): EnvConfig => {
         SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL as string,
         CONTACT_NUMBER: process.env.CONTACT_NUMBER as string,
         SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD as string,
+
+        EMAIL_SENDER: {
+            SMTP_USER: process.env.EMAIL_SENDER_SMTP_USER as string,
+            SMTP_PASS: process.env.EMAIL_SENDER_SMTP_PASS as string,
+            SMTP_HOST: process.env.EMAIL_SENDER_SMTP_HOST as string,
+            SMTP_PORT: process.env.EMAIL_SENDER_SMTP_PORT as string,
+            SMTP_FROM: process.env.EMAIL_SENDER_SMTP_FROM as string
+        }
     }
 }
 

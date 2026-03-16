@@ -132,11 +132,23 @@ const logoutUser = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+// ** Verify email
+const verifyEmail = catchAsync(async (req: Request, res: Response) => {
+    const { email, otp } = req.body;
+    const result = await authServices.verifyEmail(email, otp);
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        message: "Email verify successfull",
+        data: result
+    })
+})
+
 export const authController = {
     signUpUser,
     loginUser,
     getMe,
     getNewToken,
     changePassword,
-    logoutUser
+    logoutUser,
+    verifyEmail
 }
